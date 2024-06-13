@@ -1,10 +1,9 @@
 import './App.css';
+import Body from './components/body';
 
 function App() {
   return (
-    <div className="text-xl p-10">
-     Hello
-    </div>
+    <Body />
   );
 }
 

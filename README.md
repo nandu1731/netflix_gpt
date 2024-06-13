@@ -75,3 +75,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
    -configure package.json and scripts
 
 2. configure tailwind css (official website->docs->framework guides)
+3. rafce -react arrow function component export
