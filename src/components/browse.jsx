@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Body = () => {
+const Browse = () => {
   return (
     <div>
-      body
+      browse
     </div>
   );
 }
 
-export default Body;
+export default Browse;
