@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Header from "./header";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +10,9 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const uname = useRef(null);
+  const password = useRef(null);
+  const email = useRef(null);
 
   const validate = ({ name, value }) => {
     const emailRegex =
@@ -52,6 +55,7 @@ const Login = () => {
   const handleSubmit = () => {
     if (isSignInFlow && isEmailValid && isPasswordValid) {
       alert("Logged In succesfully");
+      console.log(email.current.value,password.current.value);
     } else if (
       !isSignInFlow &&
       isEmailValid &&
@@ -60,7 +64,7 @@ const Login = () => {
     ) {
       alert("Successfully created account");
     } else {
-      console.log(isEmailValid,isPasswordValid,isUsernameValid)
+      console.log(isEmailValid, isPasswordValid, isUsernameValid);
       setError(
         isSignInFlow
           ? "Password or email is incorrect"
@@ -93,6 +97,7 @@ const Login = () => {
           {!isSignInFlow && (
             <input
               type="name"
+              ref={uname}
               name="username"
               onChange={(e) => validate(e?.target)}
               className="border-black p-3 my-5 w-full bg-gray-600"
@@ -102,6 +107,7 @@ const Login = () => {
           <input
             type="email"
             name="email"
+            ref={email}
             onChange={(e) => validate(e?.target)}
             placeholder="Enter email address"
             className="border-black p-3 my-5 w-full bg-gray-600"
@@ -110,6 +116,7 @@ const Login = () => {
           <input
             type="password"
             name="password"
+            ref={password}
             onChange={(e) => validate(e?.target)}
             placeholder="Enter password"
             className="border-black p-3 my-5 w-full bg-gray-600"
@@ -123,10 +130,10 @@ const Login = () => {
             // disabled={!isValid}
             style={{
               opacity: isSignInFlow
-                ? (isEmailValid && isPasswordValid)
+                ? isEmailValid && isPasswordValid
                   ? "1"
                   : "0.5"
-                : (isEmailValid && isPasswordValid && isUsernameValid)
+                : isEmailValid && isPasswordValid && isUsernameValid
                 ? "1"
                 : "0.5",
             }}
