@@ -1,11 +1,75 @@
 import React, { useState } from "react";
 import Header from "./header";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isSignInFlow, setIsSignInFlow] = useState(true);
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [isUsernameValid, setIsUsernameValid] = useState(false);
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
+  const validate = ({ name, value }) => {
+    const emailRegex =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+    if (name === "email") {
+      if (!emailRegex.test(value)) {
+        setError("Email is incorrect");
+        setIsEmailValid(false);
+      } else {
+        setError("");
+        setIsEmailValid(true);
+      }
+    } else if (name === "password") {
+      console.log(passwordRegex.test(value), value);
+      if (!passwordRegex.test(value)) {
+        setError("Password is incorrect");
+        setIsPasswordValid(false);
+      } else {
+        setError("");
+        setIsPasswordValid(true);
+      }
+    } else {
+      if (name === "username") {
+        if (value.length > 8 && value.length < 15) {
+          setError("");
+          setIsUsernameValid(true);
+        } else {
+          setError("Username is invalid");
+          setIsUsernameValid(false);
+        }
+      }
+    }
+  };
 
   const toggleFlow = () => {
     setIsSignInFlow(!isSignInFlow);
+  };
+
+  const handleSubmit = () => {
+    if (isSignInFlow && isEmailValid && isPasswordValid) {
+      alert("Logged In succesfully");
+    } else if (
+      !isSignInFlow &&
+      isEmailValid &&
+      isPasswordValid &&
+      isUsernameValid
+    ) {
+      alert("Successfully created account");
+    } else {
+      console.log(isEmailValid,isPasswordValid,isUsernameValid)
+      setError(
+        isSignInFlow
+          ? "Password or email is incorrect"
+          : "Password, email or username is incorrect"
+      );
+      setIsEmailValid(false);
+      setIsPasswordValid(false);
+      setIsUsernameValid(false);
+    }
   };
 
   return (
@@ -30,14 +94,15 @@ const Login = () => {
             <input
               type="name"
               name="username"
+              onChange={(e) => validate(e?.target)}
               className="border-black p-3 my-5 w-full bg-gray-600"
               placeholder="Enter username"
             />
           )}
-
           <input
             type="email"
             name="email"
+            onChange={(e) => validate(e?.target)}
             placeholder="Enter email address"
             className="border-black p-3 my-5 w-full bg-gray-600"
           />
@@ -45,13 +110,28 @@ const Login = () => {
           <input
             type="password"
             name="password"
+            onChange={(e) => validate(e?.target)}
             placeholder="Enter password"
             className="border-black p-3 my-5 w-full bg-gray-600"
           />
           <br />
+          {error && (
+            <p className="bg-yellow-300 text-black p-1 rounded-sm">{error}</p>
+          )}
           <button
             type="button"
-            className="px-16 py-3 bg-red-600 text-white rounded-md my-5 w-full"
+            // disabled={!isValid}
+            style={{
+              opacity: isSignInFlow
+                ? (isEmailValid && isPasswordValid)
+                  ? "1"
+                  : "0.5"
+                : (isEmailValid && isPasswordValid && isUsernameValid)
+                ? "1"
+                : "0.5",
+            }}
+            onClick={handleSubmit}
+            className="px-16 py-3 bg-red-600 text-white rounded-md my-5 w-full cursor-pointer"
           >
             {isSignInFlow ? "Sign In" : "Sign Up"}
           </button>
