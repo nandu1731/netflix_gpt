@@ -1,6 +1,12 @@
 import React, { useRef, useState } from "react";
 import Header from "./header";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "./../utils/firebase";
 
 const Login = () => {
   const [isSignInFlow, setIsSignInFlow] = useState(true);
@@ -10,6 +16,7 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const uname = useRef(null);
   const password = useRef(null);
   const email = useRef(null);
@@ -27,7 +34,7 @@ const Login = () => {
         setIsEmailValid(true);
       }
     } else if (name === "password") {
-      console.log(passwordRegex.test(value), value);
+      // console.log(passwordRegex.test(value), value);
       if (!passwordRegex.test(value)) {
         setError("Password is incorrect");
         setIsPasswordValid(false);
@@ -52,17 +59,68 @@ const Login = () => {
     setIsSignInFlow(!isSignInFlow);
   };
 
+  const handleSignIn = () => {
+    signInWithEmailAndPassword(
+      auth,
+      email.current.value,
+      password.current.value
+    )
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        console.log(error);
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
+        setError(error.message);
+        // ..
+      });
+  };
+
+  const handleSignUp = () => {
+    createUserWithEmailAndPassword(
+      auth,
+      email.current.value,
+      password.current.value,
+      uname.current.value
+    )
+      .then((userCredential) => {
+        // Signed up
+        const user = userCredential.user;
+        console.log(user);
+        // if (user?.uid) {
+        //   navigate("/browse");
+        // }
+        // ...
+      })
+      .catch((error) => {
+        console.log(error);
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
+        setError(error.message);
+        // ..
+      });
+  };
+
   const handleSubmit = () => {
     if (isSignInFlow && isEmailValid && isPasswordValid) {
-      alert("Logged In succesfully");
-      console.log(email.current.value,password.current.value);
+      // alert("Logged In succesfully");
+      console.log(email.current.value, password.current.value);
+      handleSignIn();
     } else if (
       !isSignInFlow &&
       isEmailValid &&
       isPasswordValid &&
       isUsernameValid
     ) {
-      alert("Successfully created account");
+      console.log(
+        email.current.value,
+        password.current.value,
+        uname.current.value
+      );
+      handleSignUp();
+      // alert("Successfully created account");
     } else {
       console.log(isEmailValid, isPasswordValid, isUsernameValid);
       setError(
@@ -73,6 +131,7 @@ const Login = () => {
       setIsEmailValid(false);
       setIsPasswordValid(false);
       setIsUsernameValid(false);
+      return;
     }
   };
 
