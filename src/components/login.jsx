@@ -83,7 +83,6 @@ const Login = () => {
       auth,
       email.current.value,
       password.current.value,
-      uname.current.value
     )
       .then((userCredential) => {
         // Signed up
