@@ -5,8 +5,10 @@ import { useDispatch } from "react-redux";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "./../utils/firebase";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
   const [isSignInFlow, setIsSignInFlow] = useState(true);
@@ -67,7 +69,21 @@ const Login = () => {
     )
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log(user);
+        updateProfile(user, {
+          displayName: "Nandu",
+          photoURL:
+            "https://images.pexels.com/photos/1391498/pexels-photo-1391498.jpeg?cs=srgb&dl=pexels-soldiervip-1391498.jpg&fm=jpg",
+        })
+          .then(() => {
+            // Profile updated!
+            const { uid, email, displayName, photoURL } = user;
+            dispatch(addUser({ uid, email, displayName, photoURL }));
+            navigate("/browse");
+          })
+          .catch((error) => {
+            // An error occurred
+            console.log(error.message);
+          });
       })
       .catch((error) => {
         console.log(error);
@@ -88,10 +104,7 @@ const Login = () => {
         // Signed up
         const user = userCredential.user;
         console.log(user);
-        // if (user?.uid) {
-        //   navigate("/browse");
-        // }
-        // ...
+        navigate('/browse');
       })
       .catch((error) => {
         console.log(error);
