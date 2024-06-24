@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { signOut, updateProfile } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import HeaderV1 from "./headerV1";
 import { updateUser } from "../utils/userSlice";
+import Header from "./header";
 
 const Browse = () => {
   const navigate = useNavigate();
@@ -45,41 +45,7 @@ const Browse = () => {
       });
   };
 
-
-  return (
-    <div className="flex justify-between p-5 bg-black">
-      <HeaderV1 />
-      <div className="flex justify-between">
-        {!userInfo?.displayName && (
-          <button
-            onClick={handleUpdate}
-            type="button"
-            className=" text-white mx-5"
-          >
-            Update Profile
-          </button>
-        )}
-
-        <div className="flex justify-between">
-          <img
-            className="w-6 h-6 rounded-xl"
-            src={
-              userInfo?.photoURL
-                ? userInfo.photoURL
-                : "https://upload.wikimedia.org/wikipedia/commons/a/af/Default_avatar_profile.jpg"
-            }
-          />
-          <button
-            onClick={handleSignOut}
-            type="button"
-            className=" text-white mx-1"
-          >
-            Sign Out
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  return <Header />;
 };
 
 export default Browse;
