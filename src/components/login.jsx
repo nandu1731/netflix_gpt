@@ -36,7 +36,6 @@ const Login = () => {
         setIsEmailValid(true);
       }
     } else if (name === "password") {
-      // console.log(passwordRegex.test(value), value);
       if (!passwordRegex.test(value)) {
         setError("Password is incorrect");
         setIsPasswordValid(false);
@@ -86,7 +85,7 @@ const Login = () => {
           });
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.message);
         // const errorCode = error.code;
         // const errorMessage = error.message;
         setError(error.message);
@@ -118,7 +117,6 @@ const Login = () => {
   const handleSubmit = () => {
     if (isSignInFlow && isEmailValid && isPasswordValid) {
       // alert("Logged In succesfully");
-      console.log(email.current.value, password.current.value);
       handleSignIn();
     } else if (
       !isSignInFlow &&
@@ -134,7 +132,6 @@ const Login = () => {
       handleSignUp();
       // alert("Successfully created account");
     } else {
-      console.log(isEmailValid, isPasswordValid, isUsernameValid);
       setError(
         isSignInFlow
           ? "Password or email is incorrect"
